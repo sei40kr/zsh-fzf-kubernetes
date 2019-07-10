@@ -1,0 +1,17 @@
+# -*- mode: sh -*-
+
+# fzf-kubectl-config-use-context
+# author: Seong Yong-ju <sei40kr@gmail.com>
+
+fzf-kubectl-config-use-context() {
+    local context="$(kubectl config get-contexts |
+        awk '{ print substr($0, 11) }' |
+        eval "fzf ${FZF_DEFAULT_OPTS} --header-lines=1" |
+        awk '{ print $1 }')"
+
+    if [[ -n "$context" ]]; then
+        kubectl config use-context "$context"
+    fi
+}
+
+fzf-kubectl-config-use-context "$@"
